@@ -3,25 +3,28 @@ package com.kernacs.tweetfinder
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.kernacs.tweetfinder.R
 import com.kernacs.tweetfinder.ui.theme.TweetFinderTheme
 
 class MainActivity : ComponentActivity() {
+
+    private val searchResultViewModel by viewModels<TweetSearchViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -31,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ScreenContent()
+                    ScreenContent(searchResultViewModel)
                 }
             }
         }
@@ -41,7 +44,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScreenContent() {
+fun ScreenContent(viewModel: TweetSearchViewModel) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -58,22 +61,27 @@ fun ScreenContent() {
             )
         }
     ) {
-        MainContent()
+        val searchResultItems: List<String>? by viewModel.searchResultItems.observeAsState(initial = null)
+
+        MainContent(searchResultItems, viewModel::search)
     }
 
 
 }
 
 @Composable
-fun MainContent() {
+fun MainContent(searchResultItems: List<String>?, search: () -> Unit) {
 
-    var shouldShowOnBoarding by rememberSaveable { mutableStateOf(true) }
-
-    if (shouldShowOnBoarding) {
-        OnBoardingScreen(onContinueClicked = { shouldShowOnBoarding = false })
-    } else {
-        SearchResult()
-    }
+    searchResultItems?.let {
+        return if (it.isEmpty()) {
+            Text(
+                text = "No items found ! Please try another search term",
+                modifier = Modifier.fillMaxHeight()
+            )
+        } else {
+            SearchResult(it)
+        }
+    } ?: OnBoardingScreen(onContinueClicked = { search.invoke() })
 }
 
 @Composable
@@ -98,12 +106,12 @@ fun OnBoardingScreen(onContinueClicked: () -> Unit) {
 
 
 @Composable
-fun SearchResult() {
+fun SearchResult(searchResultItems: List<String>) {
     val scrollState = rememberLazyListState()
 
     LazyColumn(state = scrollState) {
-        items(100) {
-            Tweet("Item #$it")
+        items(searchResultItems.size) {
+            Tweet("Item #${searchResultItems[it]}")
         }
     }
 
@@ -128,6 +136,6 @@ fun Tweet(text: String) {
 @Composable
 fun DefaultPreview() {
     TweetFinderTheme {
-        ScreenContent()
+        SearchResult(List(30) { "Tweet" })
     }
 }
