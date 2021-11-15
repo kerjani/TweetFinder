@@ -1,24 +1,20 @@
 package com.kernacs.tweetfinder
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.kernacs.tweetfinder.util.Constants.HILT_INJECTION_TEST
+import androidx.lifecycle.viewModelScope
+import com.kernacs.tweetfinder.base.BaseViewModel
+import com.kernacs.tweetfinder.data.remote.RemoteDataSource
+import com.kernacs.tweetfinder.data.remote.dto.TweetSearchDto
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
-import kotlin.random.Random
 
 @HiltViewModel
 class TweetSearchViewModel @Inject constructor(
-    @Named(HILT_INJECTION_TEST) val hiltTest: String,
-) : ViewModel() {
+    private val remoteDataSource: RemoteDataSource
+) : BaseViewModel<List<TweetSearchDto.Tweet>>() {
 
-    fun search() {
-        _searchResultItems.postValue(listOf(hiltTest) + List(100) { "${Random.nextInt()}" })
+    fun search(query: String) = viewModelScope.launch {
+        loadData { remoteDataSource.search(query) }
     }
-
-    private var _searchResultItems = MutableLiveData<List<String>?>(null)
-    val searchResultItems: LiveData<List<String>?> = _searchResultItems
 
 }

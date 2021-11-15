@@ -22,6 +22,22 @@ The app displays search result of tweets from Twitter based on entered keywords.
 * [LiveData](https://developer.android.com/topic/libraries/architecture/livedata) to handle data in
   a lifecycle-aware fashion.
 
+## Build instructions
+
+The project uses values from `local.properties`:
+
+* The Twitter API needs keys and tokens to work. It is stored in the  `local.properties` file in the
+  project
+
+The content of the `local.properties` file should look like this:
+
+```
+API_KEY="AAAA"
+API_KEY_SECRET="BBBBB"
+ACCESS_TOKEN="TTTTTT"
+ACCESS_TOKEN_SECRET="SSSSSS"
+```
+
 ## LICENSE
 
 MIT License
@@ -29,8 +45,8 @@ MIT License
 Copyright (c) 2021 János Kernács
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
-associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
+associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
