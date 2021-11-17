@@ -14,7 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.kernacs.tweetfinder.data.remote.dto.TweetSearchDto
+import com.kernacs.tweetfinder.data.remote.dto.TweetDto
 import com.kernacs.tweetfinder.ui.composables.EmptyView
 import com.kernacs.tweetfinder.ui.composables.LoadingDialog
 import com.kernacs.tweetfinder.ui.composables.OnBoardingView
@@ -70,19 +70,20 @@ fun ScreenContent(viewModel: TweetSearchViewModel) {
             )
         }
     ) {
-        val searchResultItems by viewModel.data.observeAsState(initial = null)
+        val searchResultItems by viewModel.searchResultItems.observeAsState(initial = null)
         val isLoading by viewModel.isLoading.observeAsState(initial = false)
         if (isLoading) {
             LoadingDialog()
         } else {
             MainContent(searchResultItems, viewModel::search)
         }
+        viewModel.error
     }
 
 }
 
 @Composable
-fun MainContent(searchResultItems: List<TweetSearchDto.Tweet>?, search: (String) -> Unit) {
+fun MainContent(searchResultItems: List<TweetDto>?, search: (String) -> Unit) {
 
     searchResultItems?.let {
         return if (it.isEmpty()) {
@@ -91,5 +92,5 @@ fun MainContent(searchResultItems: List<TweetSearchDto.Tweet>?, search: (String)
             SearchResultList(it)
         }
     }
-        ?: OnBoardingView(onContinueClicked = { search.invoke("&@°°°˘^ˇˇ˘°˙´´×÷¨őúüőőúüőúü!%===!++KLÁ<>") })
+        ?: OnBoardingView(onContinueClicked = { search.invoke("nasa") })
 }

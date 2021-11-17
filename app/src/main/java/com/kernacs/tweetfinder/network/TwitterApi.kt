@@ -1,33 +1,37 @@
 package com.kernacs.tweetfinder.network
 
-import com.kernacs.tweetfinder.data.remote.dto.TweetSearchDto
-import com.kernacs.tweetfinder.util.Constants.COUNT_QUERY
-import com.kernacs.tweetfinder.util.Constants.SEARCH_QUERY
-import com.kernacs.tweetfinder.util.Constants.SEARCH_RESULT_COUNT
-import com.kernacs.tweetfinder.util.Constants.STALL_WARNINGS_QUERY
-import com.kernacs.tweetfinder.util.Constants.STREAMING_SEARCH_URL
-import com.kernacs.tweetfinder.util.Constants.TRACK_QUERY
-import com.kernacs.tweetfinder.util.Constants.V1_SEARCH_ENDPOINT
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
-import retrofit2.http.Streaming
+import com.kernacs.tweetfinder.data.remote.dto.AddRulesRequestDto
+import com.kernacs.tweetfinder.data.remote.dto.DeleteRulesRequestDto
+import com.kernacs.tweetfinder.data.remote.dto.DeleteRulesResponseDto
+import com.kernacs.tweetfinder.data.remote.dto.GetRulesResponseDto
+import com.kernacs.tweetfinder.util.Constants.V2_SEARCH_RULES_ENDPOINT
+import com.kernacs.tweetfinder.util.Constants.V2_SEARCH_STREAM_ENDPOINT
+import com.kernacs.tweetfinder.util.Constants.withBaseUrl
+import io.ktor.client.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import javax.inject.Inject
 
 
-interface TwitterApi {
-    @GET(V1_SEARCH_ENDPOINT)
-    suspend fun search(
-        @Query(SEARCH_QUERY) terms: String,
-        @Query(COUNT_QUERY) count: Int = SEARCH_RESULT_COUNT
-    ): Response<TweetSearchDto>
+class TwitterApi @Inject constructor(private val httpClient: HttpClient) {
 
-    @Streaming
-    @POST(STREAMING_SEARCH_URL)
-    fun searchTweetsByTerm(
-        @Query(TRACK_QUERY) terms: String,
-        @Query(STALL_WARNINGS_QUERY) stallWarnings: Boolean = true
-    ): Call<ResponseBody>
+    suspend fun getRules() =
+        httpClient.get<GetRulesResponseDto>(V2_SEARCH_RULES_ENDPOINT.withBaseUrl())
+
+    suspend fun addRules(rule: String) =
+        httpClient.post<GetRulesResponseDto>(V2_SEARCH_RULES_ENDPOINT.withBaseUrl()) {
+            body = AddRulesRequestDto(listOf(AddRulesRequestDto.Rule(value = rule)))
+        }
+
+    suspend fun deleteRules(vararg ids: String) =
+        httpClient.post<DeleteRulesResponseDto>(V2_SEARCH_RULES_ENDPOINT.withBaseUrl()) {
+            body = DeleteRulesRequestDto(DeleteRulesRequestDto.Delete(ids.toList()))
+        }
+
+    suspend fun search() = httpClient.get<HttpStatement>(V2_SEARCH_STREAM_ENDPOINT.withBaseUrl()) {
+        parameter("tweet.fields", "id,author_id,public_metrics,created_at,source")
+        parameter("expansions", "author_id")
+        parameter("user.fields", "id,name,profile_image_url,username")
+    }
+
 }

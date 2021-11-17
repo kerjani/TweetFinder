@@ -1,19 +1,21 @@
 package com.kernacs.tweetfinder.di
 
+import android.util.Log
 import com.kernacs.tweetfinder.BuildConfig
 import com.kernacs.tweetfinder.network.TwitterApi
-import com.kernacs.tweetfinder.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import se.akerfeldt.okhttp.signpost.OkHttpOAuthConsumer
-import se.akerfeldt.okhttp.signpost.SigningInterceptor
-import java.util.concurrent.TimeUnit
+import io.ktor.client.*
+import io.ktor.client.engine.android.*
+import io.ktor.client.features.*
+import io.ktor.client.features.json.*
+import io.ktor.client.features.json.serializer.*
+import io.ktor.client.features.logging.*
+import io.ktor.client.features.observer.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 
 
 @Module
@@ -21,38 +23,55 @@ import java.util.concurrent.TimeUnit
 class ProvideModule {
 
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
-        val consumer = OkHttpOAuthConsumer(BuildConfig.API_KEY, BuildConfig.API_KEY_SECRET)
-        consumer.setTokenWithSecret(BuildConfig.ACCESS_TOKEN, BuildConfig.ACCESS_TOKEN_SECRET)
+    fun provideHttpClient() = HttpClient(Android) {
+        install(JsonFeature) {
+            serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
+                prettyPrint = true
+                isLenient = true
+                ignoreUnknownKeys = true
+            })
 
-        val builder = OkHttpClient.Builder()
-            .connectTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
-            .readTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
-            .addInterceptor(SigningInterceptor(consumer))
-
-        if (BuildConfig.DEBUG) {
-            val loggingInterceptor = HttpLoggingInterceptor()
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-            builder.addInterceptor(loggingInterceptor)
+            engine {
+                connectTimeout = TIME_OUT
+                socketTimeout = TIME_OUT
+            }
         }
-        return builder.build()
+
+        install(Logging) {
+            logger = object : Logger {
+                override fun log(message: String) {
+                    Log.v("Logger Ktor =>", message)
+                }
+
+            }
+            level = LogLevel.ALL
+        }
+
+        install(ResponseObserver) {
+            onResponse { response ->
+                Log.d("HTTP status:", "${response.status.value}")
+            }
+        }
+
+        install(DefaultRequest) {
+            header(HttpHeaders.ContentType, ContentType.Application.Json)
+            header(HttpHeaders.Authorization, "Bearer ${BuildConfig.BEARER_TOKEN}")
+        }
+
+        expectSuccess = false
+        HttpResponseValidator {
+            handleResponseException { exception ->
+                throw exception
+            }
+        }
     }
 
 
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .addConverterFactory(GsonConverterFactory.create())
-        .baseUrl(Constants.BASE_API_V1_URL)
-        .client(okHttpClient)
-        .build()
-
-    @Provides
-    fun provideApiService(retrofit: Retrofit): TwitterApi = retrofit.create(
-        TwitterApi::class.java
-    )
+    fun scooterApi(client: HttpClient): TwitterApi = TwitterApi(client)
 
     companion object {
-        private const val TIME_OUT_SECONDS = 60L
+        private const val TIME_OUT = 60_000
     }
 
 }
