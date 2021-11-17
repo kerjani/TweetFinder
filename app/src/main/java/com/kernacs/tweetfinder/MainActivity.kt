@@ -5,20 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import com.kernacs.tweetfinder.data.remote.dto.TweetDto
-import com.kernacs.tweetfinder.ui.composables.EmptyView
-import com.kernacs.tweetfinder.ui.composables.LoadingDialog
-import com.kernacs.tweetfinder.ui.composables.OnBoardingView
-import com.kernacs.tweetfinder.ui.composables.SearchResultList
+import com.kernacs.tweetfinder.ui.composables.*
 import com.kernacs.tweetfinder.ui.theme.TweetFinderTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,7 +30,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.error
                 ) {
                     ScreenContent(searchResultViewModel)
                 }
@@ -49,25 +45,7 @@ class MainActivity : ComponentActivity() {
 fun ScreenContent(viewModel: TweetSearchViewModel) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                backgroundColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.app_name),
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                },
-                actions = {
-                    IconButton(onClick = { /* doSomething() */ }) {
-                        Icon(
-                            Icons.Filled.Search,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                }
-            )
+            SearchView(viewModel::search)
         }
     ) {
         val searchResultItems by viewModel.searchResultItems.observeAsState(initial = null)
