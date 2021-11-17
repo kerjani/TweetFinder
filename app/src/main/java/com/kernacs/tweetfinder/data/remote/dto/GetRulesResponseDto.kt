@@ -5,7 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetRulesResponseDto(
     val `data`: List<Data>? = null,
-    val meta: Meta
+    val meta: Meta?? = null,
+    val errors: List<String>? = null,
 ) {
     @Serializable
     data class Data(
