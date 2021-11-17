@@ -4,6 +4,7 @@ import android.util.Log
 import com.kernacs.tweetfinder.data.remote.dto.TweetDto
 import com.kernacs.tweetfinder.network.TwitterApi
 import io.ktor.client.call.*
+import io.ktor.client.statement.*
 import io.ktor.utils.io.*
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
@@ -25,11 +26,16 @@ class TweetFinderRemoteDataSource @Inject constructor(
         Log.d(TAG, addResult.toString())
     }
 
-    override suspend fun search(term: String, onNewTweet: (TweetDto) -> Unit) {
+    override suspend fun search(
+        term: String,
+        onStreamStarted: (HttpResponse) -> Unit,
+        onNewTweet: (TweetDto) -> Unit
+    ) {
         setupRules(term)
 
         api.search().execute { httpResponse ->
             val channel: ByteReadChannel = httpResponse.receive()
+            onStreamStarted(httpResponse)
 
             while (!channel.isClosedForRead) {
                 channel.readUTF8Line()?.let { line ->

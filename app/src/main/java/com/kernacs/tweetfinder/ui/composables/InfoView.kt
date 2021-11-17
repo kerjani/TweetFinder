@@ -11,31 +11,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kernacs.tweetfinder.R
 import com.kernacs.tweetfinder.ui.theme.TweetFinderTheme
 
 @Composable
-fun OnBoardingView(onContinueClicked: () -> Unit) {
-
+fun InfoView(infoText: String, buttonText: String, buttonAction: (() -> Unit)? = null) {
     Surface {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                stringResource(
-                    id = R.string.onboarding_message,
-                    stringResource(id = R.string.app_name)
-                )
+                infoText,
+                Modifier.padding(16.dp),
+                textAlign = TextAlign.Center,
             )
-            Button(
-                modifier = Modifier.padding(vertical = 24.dp),
-                onClick = onContinueClicked
-            ) {
-                Text("Start Search")
+            buttonAction?.let { action ->
+                Button(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    onClick = action
+                ) {
+                    Text(buttonText)
+                }
             }
         }
     }
@@ -43,10 +46,22 @@ fun OnBoardingView(onContinueClicked: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-private fun OnBoardingPreview() {
+private fun WithButtonPreview() {
     TweetFinderTheme {
-        OnBoardingView {
+        InfoView(
+            stringResource(id = R.string.empty_text),
+            stringResource(id = R.string.empty_action)
+        ) {}
+    }
+}
 
-        }
+@Preview(showBackground = true)
+@Composable
+private fun WithoutButtonPreview() {
+    TweetFinderTheme {
+        InfoView(
+            stringResource(id = R.string.empty_text),
+            stringResource(id = R.string.empty_action)
+        )
     }
 }

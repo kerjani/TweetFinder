@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -31,10 +32,9 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun SearchView(onExecuteSearch: (String) -> Unit) {
+fun SearchView(state: MutableState<TextFieldValue>, onExecuteSearch: (String) -> Unit) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
-    val state = remember { mutableStateOf(TextFieldValue("")) }
 
     TextField(
         value = state.value,
@@ -96,6 +96,16 @@ fun SearchView(onExecuteSearch: (String) -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun SearchViewPreview() {
-    SearchView {}
+fun SearchViewEmptyPreview() {
+    val state = remember { mutableStateOf(TextFieldValue("")) }
+
+    SearchView(state) {}
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SearchViewFilledPreview() {
+    val state = remember { mutableStateOf(TextFieldValue("Filled")) }
+
+    SearchView(state) {}
 }

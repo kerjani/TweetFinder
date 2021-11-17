@@ -6,5 +6,9 @@
     <string name="loading">Loading...</string>
     <string name="onboarding_message">Welcome to %s!</string>
     <string name="onboarding_action">Start search</string>
+    <string name="generic_error_message">\"Something bad happened. \"</string>
+    <string name="wait_info_text">Stream has been started.\nPlease wait until someone tweets about this topic</string>
+    <string name="wait_button_text">Start another search</string>
+    <string name="onboarding_button_text">Start Search</string>
 
 </resources>

@@ -28,7 +28,7 @@ fun LoadingDialog() {
             modifier = Modifier
                 .size(100.dp)
                 .background(
-                    MaterialTheme.colorScheme.tertiary,
+                    MaterialTheme.colorScheme.onPrimary,
                     shape = RoundedCornerShape(12.dp)
                 )
         ) {
@@ -36,11 +36,13 @@ fun LoadingDialog() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                )
                 Text(
                     text = stringResource(id = R.string.loading),
-                    Modifier.padding(top = 8.dp),
-                    color = MaterialTheme.colorScheme.onTertiary
+                    modifier = Modifier.padding(top = 8.dp),
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
         }
