@@ -49,9 +49,13 @@ private fun OnBoardingPreview() {
 
 
 @Composable
-fun ErrorView(errorMessage: String, tryAgainAction: () -> Unit) = InfoView(
+fun ErrorView(
+    errorMessage: String,
+    buttonText: String = stringResource(id = R.string.error_text),
+    tryAgainAction: () -> Unit
+) = InfoView(
     errorMessage,
-    stringResource(id = R.string.error_text), tryAgainAction
+    buttonText, tryAgainAction
 )
 
 @Preview(showBackground = true)

@@ -15,10 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.kernacs.tweetfinder.data.remote.dto.TweetDto
+import com.kernacs.tweetfinder.data.local.entities.TweetEntity
 
 @Composable
-fun TweetListItem(item: TweetDto) {
+fun TweetListItem(tweet: TweetEntity) {
     Card(
         modifier = Modifier
             //.animateItemPlacement() TODO uncomment when it will be released https://twitter.com/CatalinGhita4/status/1455500904690552836?s=20
@@ -28,33 +28,29 @@ fun TweetListItem(item: TweetDto) {
     ) {
         val primaryTextColor = MaterialTheme.colorScheme.onSurface
         val secondaryTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-        val user: TweetDto.Includes.User = item.includes.users.firstOrNull {
-            it.id == item.data.authorId
-        } ?: item.includes.users[0]
         Row {
-            ProfilePicture(user.profileImageUrl)
+            ProfilePicture(tweet.authorProfileImageUrl)
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterVertically)
-            )
-            {
+            ) {
                 Column {
                     Text(
-                        text = user.name,
+                        text = tweet.authorName,
                         style = MaterialTheme.typography.titleMedium,
                         color = primaryTextColor,
                         modifier = Modifier.padding(0.dp, 8.dp, 8.dp, 0.dp)
                     )
                     Text(
-                        text = "@${user.username}",
+                        text = "@${tweet.authorScreenName}",
                         style = MaterialTheme.typography.labelMedium,
                         color = secondaryTextColor,
                         modifier = Modifier.padding(top = 2.dp)
                     )
                 }
                 Text(
-                    text = item.data.text,
+                    text = tweet.text,
                     style = MaterialTheme.typography.bodyMedium,
                     color = primaryTextColor,
                     modifier = Modifier.padding(0.dp, 10.dp, 15.dp, 17.dp)
@@ -65,26 +61,10 @@ fun TweetListItem(item: TweetDto) {
                         .padding(bottom = 8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    CountItem(
-                        item.data.publicMetrics.quoteCount,
-                        Icons.Outlined.MailOutline,
-                        secondaryTextColor
-                    )
-                    CountItem(
-                        item.data.publicMetrics.likeCount,
-                        Icons.Outlined.Favorite,
-                        secondaryTextColor
-                    )
-                    CountItem(
-                        item.data.publicMetrics.replyCount,
-                        Icons.Outlined.Refresh,
-                        secondaryTextColor
-                    )
-                    CountItem(
-                        item.data.publicMetrics.retweetCount,
-                        Icons.Outlined.Share,
-                        secondaryTextColor
-                    )
+                    CountItem(tweet.quoteCount, Icons.Outlined.MailOutline, secondaryTextColor)
+                    CountItem(tweet.likeCount, Icons.Outlined.Favorite, secondaryTextColor)
+                    CountItem(tweet.replyCount, Icons.Outlined.Refresh, secondaryTextColor)
+                    CountItem(tweet.retweetCount, Icons.Outlined.Share, secondaryTextColor)
                 }
             }
         }

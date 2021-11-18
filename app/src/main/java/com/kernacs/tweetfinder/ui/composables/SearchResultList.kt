@@ -6,10 +6,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import com.kernacs.tweetfinder.data.remote.dto.TweetDto
+import com.kernacs.tweetfinder.data.local.entities.TweetEntity
 
 @Composable
-fun SearchResultList(searchResultItems: List<TweetDto>) {
+fun SearchResultList(searchResultItems: List<TweetEntity>) {
     val scrollState = rememberLazyListState()
 
     LazyColumn(
