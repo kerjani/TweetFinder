@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "571776042537",
+    "project_id": "tweet-finder-app",
+    "storage_bucket": "tweet-finder-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571776042537:android:9a983aff94d86c9c9abe38",
+        "android_client_info": {
+          "package_name": "com.kernacs.tweetfinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "571776042537-vamg713q21h0eapeiiud6nq6svse9n4p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAf3NrqwEy3mT0p7tHCkr2B6OVEvurc7jA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "571776042537-vamg713q21h0eapeiiud6nq6svse9n4p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
