@@ -20,8 +20,8 @@ jobs:
         LIFESPAN_IN_MILLISECONDS: ${{secrets.LIFESPAN_IN_MILLISECONDS}}
       run: |
         echo '' >> ./local.properties
-        echo BEARER_TOKEN="BEARER_TOKEN" >> ./local.properties
-        echo LIFESPAN_IN_MILLISECONDS="LIFESPAN_IN_MILLISECONDS" >> ./local.properties
+        echo BEARER_TOKEN="$BEARER_TOKEN" >> ./local.properties
+        echo LIFESPAN_IN_MILLISECONDS="$LIFESPAN_IN_MILLISECONDS" >> ./local.properties
     - name: build debug
       run: ./gradlew assembleDebug --stacktrace
     - name: upload artifact to Firebase App Distribution
