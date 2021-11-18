@@ -7,6 +7,7 @@ a [modern Android app architecture](https://developer.android.com/modern-android
 
 The app displays search result of tweets from Twitter based on entered keywords and constantly shows
 the new tweets in a constantly updating list.
+
 * The app handles errors, empty states, loading, etc
 * The source of the data is
   the [official Twitter streaming API](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/quick-start)
@@ -14,6 +15,8 @@ the new tweets in a constantly updating list.
   from the list. This time frame of the lifespan can be also configured in the code (see below)
 * If the app goes offline the result of the previous search keeps loaded and also the deletion of
   the expired items stops
+* The app is distributed via Firebase App Distribution. You can join to the testers
+  with [this invite link](https://appdistribution.firebase.dev/i/7103c94fe5fb2cc1)
 
 ## Technologies used:
 
