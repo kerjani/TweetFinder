@@ -18,6 +18,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import com.kernacs.tweetfinder.ui.composables.*
@@ -30,16 +32,24 @@ class MainActivity : ComponentActivity() {
 
     private val searchResultViewModel by viewModels<TweetSearchViewModel>()
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, androidx.compose.ui.ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             TweetFinderTheme {
 
-                val state = remember { mutableStateOf(TextFieldValue("")) }
+                val keyboardController = LocalSoftwareKeyboardController.current
+                val searchFocusRequester = FocusRequester()
+                val searchTextState = remember { mutableStateOf(TextFieldValue("")) }
 
                 Scaffold(
-                    topBar = { SearchView(state, searchResultViewModel::search) }
+                    topBar = {
+                        SearchView(
+                            searchTextState,
+                            searchFocusRequester,
+                            searchResultViewModel::search
+                        )
+                    }
                 ) {
                     val viewState = searchResultViewModel.viewState.observeAsState()
                     val searchResultItems =
@@ -49,7 +59,8 @@ class MainActivity : ComponentActivity() {
 
                             if (searchResultItems.value.isEmpty()) {
                                 EmptyView {
-                                    // TODO focus on the search view, bring the keyboard up
+                                    searchFocusRequester.requestFocus()
+                                    keyboardController?.show()
                                 }
                             } else {
                                 SearchResultList(searchResultItems = searchResultItems.value)
@@ -59,11 +70,10 @@ class MainActivity : ComponentActivity() {
                             val errorMessage = state.exception?.localizedMessage
                                 ?: getString(R.string.generic_error_message)
                             val actionText = stringResource(id = R.string.error_text)
-                            val errorAction = {
-                                // TODO re-run search with the same term
-                            }
                             if (searchResultItems.value.isEmpty()) {
-                                ErrorView(errorMessage, actionText, errorAction)
+                                ErrorView(errorMessage, actionText) {
+                                    searchTextState.value.text.let { searchResultViewModel.search(it) }
+                                }
                             } else {
                                 Log.d(
                                     TAG,
@@ -89,7 +99,8 @@ class MainActivity : ComponentActivity() {
                         }
                         is TweetSearchViewModel.ViewState.WaitingForStream -> {
                             WaitForStreamView {
-                                // TODO focus on the search view, bring keyboard up
+                                searchFocusRequester.requestFocus()
+                                keyboardController?.show()
                             }
                         }
                         else -> {
@@ -97,7 +108,8 @@ class MainActivity : ComponentActivity() {
                                 SearchResultList(searchResultItems = searchResultItems.value)
                             } else {
                                 OnBoardingView {
-                                    // TODO focus on the search view, bring keyboard up
+                                    searchFocusRequester.requestFocus()
+                                    keyboardController?.show()
                                 }
                             }
                         }

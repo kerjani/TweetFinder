@@ -19,6 +19,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -32,7 +34,11 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun SearchView(state: MutableState<TextFieldValue>, onExecuteSearch: (String) -> Unit) {
+fun SearchView(
+    state: MutableState<TextFieldValue>,
+    focusRequester: FocusRequester,
+    onExecuteSearch: (String) -> Unit
+) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -42,7 +48,8 @@ fun SearchView(state: MutableState<TextFieldValue>, onExecuteSearch: (String) ->
             state.value = value
         },
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .focusRequester(focusRequester),
         textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
         leadingIcon = {
             Icon(
@@ -97,15 +104,17 @@ fun SearchView(state: MutableState<TextFieldValue>, onExecuteSearch: (String) ->
 @Preview(showBackground = true)
 @Composable
 fun SearchViewEmptyPreview() {
+    val focusRequester = FocusRequester()
     val state = remember { mutableStateOf(TextFieldValue("")) }
 
-    SearchView(state) {}
+    SearchView(state, focusRequester) {}
 }
 
 @Preview(showBackground = true)
 @Composable
 fun SearchViewFilledPreview() {
+    val focusRequester = FocusRequester()
     val state = remember { mutableStateOf(TextFieldValue("Filled")) }
 
-    SearchView(state) {}
+    SearchView(state, focusRequester) {}
 }
