@@ -7,6 +7,13 @@ a [modern Android app architecture](https://developer.android.com/modern-android
 
 The app displays search result of tweets from Twitter based on entered keywords and constantly shows
 the new tweets in a constantly updating list.
+* The app handles errors, empty states, loading, etc
+* The source of the data is
+  the [official Twitter streaming API](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/quick-start)
+* The items in the search result have a lifespan, meaning that after that time it will be removed
+  from the list. This time frame of the lifespan can be also configured in the code (see below)
+* If the app goes offline the result of the previous search keeps loaded and also the deletion of
+  the expired items stops
 
 ## Technologies used:
 
@@ -49,11 +56,13 @@ The project uses values from `local.properties`:
   root project folder.
 * For more details about the authorization tokens used in the Twitter APIs check
   the [official documentation](https://developer.twitter.com/en/docs/authentication/oauth-2-0).
+* THe lifespan of the items in the list can be also configured here (in milliseconds).
 
 The content of the `local.properties` file should look like this:
 
 ```
 BEARER_TOKEN="TTTTTT"
+LIFESPAN_IN_MILLISECONDS=30000
 ```
 
 ## LICENSE
