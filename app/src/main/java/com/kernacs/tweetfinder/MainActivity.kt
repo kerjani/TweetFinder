@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import com.kernacs.tweetfinder.ui.composables.*
 import com.kernacs.tweetfinder.ui.theme.TweetFinderTheme
+import com.kernacs.tweetfinder.util.isNetworkAvailable
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -92,8 +93,12 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         else -> {
-                            OnBoardingView {
-                                // TODO focus on the search view, bring keyboard up
+                            if (searchResultItems.value.isNotEmpty() && !this@MainActivity.isNetworkAvailable()) {
+                                SearchResultList(searchResultItems = searchResultItems.value)
+                            } else {
+                                OnBoardingView {
+                                    // TODO focus on the search view, bring keyboard up
+                                }
                             }
                         }
                     }
