@@ -8,7 +8,9 @@ import javax.inject.Inject
 class TweetFinderLocalDataSource @Inject constructor(
     private val dao: TweetsDao
 ) : LocalDataSource {
-    override suspend fun deleteExpiredData() = dao.deleteExpiredData()
+    override suspend fun deleteExpiredData(timeStamp: Long) = dao.deleteExpiredData(timeStamp)
+    override suspend fun insertAndCleanup(timeStamp: Long, tweet: TweetEntity) =
+        dao.insertAndCleanup(timeStamp, tweet)
 
     override fun getTweets(): Flow<List<TweetEntity>> = dao.getTweets()
 

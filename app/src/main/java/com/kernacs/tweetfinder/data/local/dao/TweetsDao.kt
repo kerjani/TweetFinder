@@ -1,12 +1,8 @@
 package com.kernacs.tweetfinder.data.local.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.kernacs.tweetfinder.data.local.entities.TweetEntity
 import kotlinx.coroutines.flow.Flow
-import java.util.*
 
 @Dao
 interface TweetsDao {
@@ -18,8 +14,14 @@ interface TweetsDao {
     fun getTweets(): Flow<List<TweetEntity>>
 
     @Query("DELETE from tweets where lifeSpanExpirationTimeStamp <= :timeStamp")
-    suspend fun deleteExpiredData(timeStamp: Long = Date().time)
+    suspend fun deleteExpiredData(timeStamp: Long)
 
     @Query("DELETE FROM tweets")
     suspend fun deleteAll()
+
+    @Transaction
+    suspend fun insertAndCleanup(timeStamp: Long, tweet: TweetEntity) {
+        deleteExpiredData(timeStamp)
+        insert(tweet)
+    }
 }
