@@ -8,5 +8,4 @@ interface LocalDataSource {
     suspend fun saveTweet(tweet: TweetEntity)
     suspend fun deleteAllTweets()
     suspend fun deleteExpiredData(timeStamp: Long)
-    suspend fun insertAndCleanup(timeStamp: Long, tweet: TweetEntity)
 }

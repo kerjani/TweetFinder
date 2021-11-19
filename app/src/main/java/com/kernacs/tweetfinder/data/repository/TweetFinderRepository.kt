@@ -39,16 +39,15 @@ class TweetFinderRepository @Inject constructor(
                 deleteTweets()
                 Log.d(TweetSearchViewModel.TAG, "Waiting for the search result to be returned")
             }) { newItem ->
-                val newTweet = newItem.toEntity()
                 if (lastExpiredDataDeleted + DELETE_EXPIRED_DATA_MINIMAL_INTERVAL <= Date().time) {
                     Log.d(TAG, "Starting deletion of expired tweets")
-                    val cleanupRunDate = Date().time
-                    insertAndCleanup(cleanupRunDate, newTweet)
-                    lastExpiredDataDeleted = cleanupRunDate
-                } else{
-                    saveTweet(newTweet)
+                    val referenceDate = Date().time
+                    deleteExpiredTweets(referenceDate)
+                    lastExpiredDataDeleted = referenceDate
                 }
-                emit(TweetSearchViewModel.ViewState.SearchResult)
+                saveTweet(newItem.toEntity())
+
+                emit(TweetSearchViewModel.ViewState.SearchResult) // refresh list
             }
         } catch (e: Exception) {
             Log.e(TAG, e.stackTraceToString())
@@ -58,9 +57,11 @@ class TweetFinderRepository @Inject constructor(
 
     override fun getTweets() = localDataSource.getTweets()
 
-    override suspend fun deleteExpiredTweets(timeStamp: Long) = localDataSource.deleteExpiredData(timeStamp)
+    override suspend fun deleteExpiredTweets(timeStamp: Long) =
+        localDataSource.deleteExpiredData(timeStamp)
 
-    override suspend fun insertAndCleanup(timeStamp: Long, tweet: TweetEntity) = localDataSource.insertAndCleanup(timeStamp, tweet)
+    override suspend fun insert(tweet: TweetEntity) =
+        localDataSource.saveTweet(tweet)
 
     override suspend fun deleteTweets() = localDataSource.deleteAllTweets()
 

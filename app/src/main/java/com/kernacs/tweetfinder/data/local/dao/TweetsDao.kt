@@ -10,6 +10,7 @@ interface TweetsDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(tweet: TweetEntity)
 
+    @Transaction
     @Query("SELECT * FROM tweets ORDER BY lifeSpanExpirationTimeStamp DESC")
     fun getTweets(): Flow<List<TweetEntity>>
 
@@ -18,10 +19,4 @@ interface TweetsDao {
 
     @Query("DELETE FROM tweets")
     suspend fun deleteAll()
-
-    @Transaction
-    suspend fun insertAndCleanup(timeStamp: Long, tweet: TweetEntity) {
-        deleteExpiredData(timeStamp)
-        insert(tweet)
-    }
 }
