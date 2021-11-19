@@ -6,4 +6,7 @@ object Constants {
     private const val BASE_API_URL = "https://api.twitter.com/"
 
     fun String.withBaseUrl() = BASE_API_URL + this
+
+    const val CONFIGURATION_TAG = "ConfigurationCheck"
+    const val DEFAULT_CONFIG_LIFESPAN = 30000L
 }

@@ -3,7 +3,6 @@ package com.kernacs.tweetfinder.data.repository
 import com.kernacs.tweetfinder.TweetSearchViewModel
 import com.kernacs.tweetfinder.data.local.entities.TweetEntity
 import kotlinx.coroutines.flow.Flow
-import java.util.*
 
 interface Repository {
 

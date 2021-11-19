@@ -22,13 +22,13 @@ the new tweets in a constantly updating list.
 
 * [Jetpack Compose](https://developer.android.com/jetpack/compose) Jetpack Compose is Android’s
   modern toolkit for building native UI. It simplifies and accelerates UI development on Android.
-  * **Unidirectional data flow** is a design where events flow up and state flows down. <br> For
-    example, in a ViewModel events are passed up with method calls from the UI while state flows
-    down using LiveData.
+    * **Unidirectional data flow** is a design where events flow up and state flows down. <br> For
+      example, in a ViewModel events are passed up with method calls from the UI while state flows
+      down using LiveData.
 * [Material Design 3 (Material You)](https://m3.material.io/) A set of design system updates that
   enables more beautiful, personalized expression.
-  * Dynamic color plays a key role in Material You, creating individualized and expressive
-    experiences for the users and opening up new possibilities for the role of color in the app.
+    * Dynamic color plays a key role in Material You, creating individualized and expressive
+      experiences for the users and opening up new possibilities for the role of color in the app.
 * [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel) to store and
   manage UI-related data in a lifecycle conscious way.
 * [LiveData](https://developer.android.com/topic/libraries/architecture/livedata) to handle data in
@@ -59,7 +59,8 @@ The project uses values from `local.properties`:
   root project folder.
 * For more details about the authorization tokens used in the Twitter APIs check
   the [official documentation](https://developer.twitter.com/en/docs/authentication/oauth-2-0).
-* THe lifespan of the items in the list can be also configured here (in milliseconds).
+* THe lifespan of the items in the list can be also configured here (in milliseconds). Default value
+  is 30000 (30 seconds).
 
 The content of the `local.properties` file should look like this:
 
