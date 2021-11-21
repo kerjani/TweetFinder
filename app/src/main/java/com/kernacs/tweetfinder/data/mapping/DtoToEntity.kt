@@ -12,7 +12,6 @@ fun TweetDto.toEntity(): TweetEntity {
         text = data.text,
         createdAt = data.createdAt.isoStringToDate().time,
         authorId = data.authorId,
-        source = data.source,
         likeCount = data.publicMetrics.likeCount,
         replyCount = data.publicMetrics.replyCount,
         quoteCount = data.publicMetrics.quoteCount,
