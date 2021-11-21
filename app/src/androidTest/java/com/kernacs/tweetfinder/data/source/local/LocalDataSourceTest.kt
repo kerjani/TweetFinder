@@ -13,14 +13,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.Matchers.`is`
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.concurrent.Executors
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -43,7 +42,6 @@ class TweetLocalDataSourceTest {
             ApplicationProvider.getApplicationContext(),
             TweetsDatabase::class.java
         ).allowMainThreadQueries()
-            .setTransactionExecutor(Executors.newSingleThreadExecutor())
             .build()
 
         systemUnderTest = TweetFinderLocalDataSource(database.tweetsDao)
@@ -55,7 +53,7 @@ class TweetLocalDataSourceTest {
     }
 
     @Test
-    fun saveTweetCheckNoIfInserted() = runBlocking {
+    fun saveTweetCheckNoIfInserted() = mainCoroutineRule.runBlockingTest {
         systemUnderTest.saveTweet(fakeEntity)
 
         val returnedTweets = async {
@@ -68,7 +66,7 @@ class TweetLocalDataSourceTest {
     }
 
     @Test
-    fun saveTweetDeleteAllCheckNoItemsLeft() = runBlocking {
+    fun saveTweetDeleteAllCheckNoItemsLeft() = mainCoroutineRule.runBlockingTest {
         systemUnderTest.saveTweet(fakeEntity)
 
         var result = async {
@@ -86,7 +84,7 @@ class TweetLocalDataSourceTest {
     }
 
     @Test
-    fun saveExpiredDeleteAllExpiredItIsDeleted() = runBlocking {
+    fun saveExpiredDeleteAllExpiredItIsDeleted() = mainCoroutineRule.runBlockingTest {
         systemUnderTest.saveTweet(expiredEntity)
 
         var result = async {
@@ -105,7 +103,7 @@ class TweetLocalDataSourceTest {
     }
 
     @Test
-    fun saveNotYetExpiredDeleteAllExpiredItRemains() = runBlocking {
+    fun saveNotYetExpiredDeleteAllExpiredItRemains() = mainCoroutineRule.runBlockingTest {
         systemUnderTest.saveTweet(notYetExpiredEntity)
 
         var result = async {
