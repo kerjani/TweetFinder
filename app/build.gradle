@@ -30,8 +30,8 @@ android {
         }
 
         // default values if it would be missing
-        buildConfigField ("long", "LIFESPAN_IN_MILLISECONDS", '0') // 0 or less means disabled cleanup
-        buildConfigField ("String", "BEARER_TOKEN", "\"\"")
+        buildConfigField("long", "LIFESPAN_IN_MILLISECONDS", '0')
+        buildConfigField("String", "BEARER_TOKEN", "\"\"")
     }
 
     buildTypes {
@@ -55,7 +55,8 @@ android {
     }
     packagingOptions {
         resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            excludes += '/META-INF/{AL2.0,LGPL2.1,licenses/**}'
+            excludes += '**/attach_hotspot_windows.dll'
         }
     }
 }
@@ -93,8 +94,8 @@ dependencies {
 
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test.ext:junit:1.1.3"
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.4.0"
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutine_version"
+    androidTestImplementation "androidx.arch.core:core-testing:$archTesting_version"
+
 }

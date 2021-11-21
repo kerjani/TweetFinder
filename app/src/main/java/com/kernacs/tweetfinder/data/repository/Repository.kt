@@ -11,5 +11,5 @@ interface Repository {
     suspend fun deleteExpiredTweets(timeStamp: Long)
     suspend fun deleteTweets()
     fun cancelSearch()
-    suspend fun insertAndCleanup(timeStamp: Long, tweet: TweetEntity)
+    suspend fun insert(tweet: TweetEntity)
 }
