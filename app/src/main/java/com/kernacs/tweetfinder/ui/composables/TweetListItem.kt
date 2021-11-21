@@ -19,10 +19,9 @@ import com.kernacs.tweetfinder.data.local.entities.TweetEntity
 import com.kernacs.tweetfinder.util.formatTweetDate
 
 @Composable
-fun TweetListItem(tweet: TweetEntity) {
+fun TweetListItem(tweet: TweetEntity, modifier : Modifier = Modifier) {
     Card(
-        modifier = Modifier
-            //.animateItemPlacement() TODO uncomment when it will be released https://twitter.com/CatalinGhita4/status/1455500904690552836?s=20
+        modifier = modifier
             .padding(4.dp),
         backgroundColor = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(corner = CornerSize(8.dp))
