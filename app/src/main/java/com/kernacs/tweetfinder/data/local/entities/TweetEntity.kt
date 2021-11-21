@@ -10,7 +10,6 @@ data class TweetEntity(
     val text: String,
     val createdAt: Long,
     val authorId: String,
-    val source: String,
     val likeCount: Int,
     val quoteCount: Int,
     val replyCount: Int,

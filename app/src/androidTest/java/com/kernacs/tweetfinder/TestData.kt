@@ -8,7 +8,6 @@ val fakeEntity = TweetEntity(
     text = "",
     createdAt = 0L,
     authorId = "",
-    source = "",
     likeCount = 1,
     quoteCount = 2,
     replyCount = 3,
