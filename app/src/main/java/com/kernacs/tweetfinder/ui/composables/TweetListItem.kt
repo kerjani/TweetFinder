@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kernacs.tweetfinder.data.local.entities.TweetEntity
+import com.kernacs.tweetfinder.util.formatTweetDate
 
 @Composable
 fun TweetListItem(tweet: TweetEntity) {
@@ -54,6 +55,12 @@ fun TweetListItem(tweet: TweetEntity) {
                     style = MaterialTheme.typography.bodyMedium,
                     color = primaryTextColor,
                     modifier = Modifier.padding(0.dp, 10.dp, 15.dp, 17.dp)
+                )
+                Text(
+                    text = tweet.createdAt.formatTweetDate(),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = primaryTextColor,
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
                 Row(
                     modifier = Modifier

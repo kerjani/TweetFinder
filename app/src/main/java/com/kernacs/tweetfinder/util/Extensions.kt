@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.text.format.DateFormat
 import android.util.Log
 import com.kernacs.tweetfinder.BuildConfig
 import com.kernacs.tweetfinder.util.Constants.CONFIGURATION_TAG
@@ -50,3 +51,6 @@ fun Date.expirationTimeStamp(): Long {
                 Constants.DEFAULT_CONFIG_LIFESPAN
             }
 }
+
+fun Long.formatTweetDate(): String =
+    DateFormat.format(Constants.TWEET_DATE_FORMAT, Date(this)).toString()

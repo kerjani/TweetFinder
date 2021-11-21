@@ -9,4 +9,6 @@ object Constants {
 
     const val CONFIGURATION_TAG = "ConfigurationCheck"
     const val DEFAULT_CONFIG_LIFESPAN = 30000L
+
+    const val TWEET_DATE_FORMAT = "d MMM yyy H:mm:ss"
 }
