@@ -3,7 +3,7 @@ package com.kernacs.tweetfinder.util
 import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
+import android.net.NetworkCapabilities
 import android.text.format.DateFormat
 import android.util.Log
 import com.kernacs.tweetfinder.BuildConfig
@@ -25,9 +25,19 @@ fun Date.toIsoString(): String {
 }
 
 fun Activity.isNetworkAvailable(): Boolean {
-    val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
-    return activeNetwork?.isConnectedOrConnecting == true
+    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetwork = connectivityManager.activeNetwork ?: return false
+    val networkCapabilities =
+        connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+    return when {
+        networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+        networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+        //for other device how are able to connect with Ethernet
+        networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+        //for check internet over Bluetooth
+        networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
+        else -> false
+    }
 }
 
 fun Date.expirationTimeStamp(): Long {

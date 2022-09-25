@@ -7,7 +7,6 @@ import com.kernacs.tweetfinder.data.local.entities.TweetEntity
 import com.kernacs.tweetfinder.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,9 +28,10 @@ class TweetSearchViewModel @Inject constructor(
 
     val searchResult: Flow<List<TweetEntity>> = repository.getTweets()
 
-    fun cancelSearch() = repository.cancelSearch()
+    private fun cancelSearch() = repository.cancelSearch()
 
     fun search(query: String) = viewModelScope.launch {
+        cancelSearch()
         repository.searchTweets(query).collect {
             _viewState.value = it
         }

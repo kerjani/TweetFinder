@@ -71,9 +71,7 @@ fun SearchView(
                     Icon(
                         Icons.Default.Close,
                         contentDescription = "",
-                        modifier = Modifier
-                            .padding(15.dp)
-                            .size(24.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
