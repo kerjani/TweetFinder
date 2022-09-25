@@ -25,6 +25,11 @@ class TweetFinderRemoteDataSource @Inject constructor(
         Log.d(TAG, addResult.toString())
     }
 
+    private val json = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+    }
+
     override suspend fun search(
         term: String,
         onStreamStarted: suspend (ByteReadChannel) -> Unit,
@@ -41,10 +46,7 @@ class TweetFinderRemoteDataSource @Inject constructor(
                     Log.d(TAG, line)
                     if (line.isEmpty()) return@let
                     try {
-                        Json {
-                            ignoreUnknownKeys = true
-                            isLenient = true
-                        }.decodeFromString(TweetDto.serializer(), line).let { tweet ->
+                        json.decodeFromString(TweetDto.serializer(), line).let { tweet ->
                             onNewTweet(tweet)
                         }
                     } catch (e: Exception) {

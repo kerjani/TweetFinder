@@ -39,5 +39,5 @@ abstract class TweetsDatabase : RoomDatabase() {
         tableName = "tweets",
         columnName = "source"
     )
-    class AutoMigration1To2 : AutoMigrationSpec {}
+    class AutoMigration1To2 : AutoMigrationSpec
 }

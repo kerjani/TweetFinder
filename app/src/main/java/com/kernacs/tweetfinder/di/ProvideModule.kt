@@ -73,7 +73,7 @@ class ProvideModule {
                 if (exceptionResponse.status == HttpStatusCode.NotFound) {
                     Log.e("handleResponseException", exception.message)
                     val exceptionResponseText = exceptionResponse.readText()
-                    throw MissingPageException(exceptionResponse, exceptionResponseText)
+                    throw MissingPageException(exceptionResponseText)
                 }
             }
         }
